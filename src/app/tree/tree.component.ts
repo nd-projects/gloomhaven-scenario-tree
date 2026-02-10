@@ -3,15 +3,34 @@ import cytoscape from 'cytoscape';
 import cxtmenu from 'cytoscape-cxtmenu';
 import { SettingsService } from '../settings.service';
 import { Subscription } from 'rxjs';
+import { MaterialModule } from '../material.module';
+
 
 cytoscape.use(cxtmenu);
 
 @Component({
     selector: 'app-tree',
-    template: '<div id="cy" #cy class="flex-item"></div>',
+    template: `
+      <div class="tree-container">
+        <div id="cy" #cy class="flex-item"></div>
+        <div class="zoom-controls">
+          <button mat-mini-fab color="primary" (click)="zoomIn()" matTooltip="Zoom In">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-mini-fab color="primary" (click)="zoomOut()" matTooltip="Zoom Out">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <button mat-mini-fab color="accent" (click)="resetView()" matTooltip="Home View">
+            <mat-icon>home</mat-icon>
+          </button>
+        </div>
+      </div>
+    `,
     styleUrls: ['./tree.component.css'],
-    standalone: true
+    standalone: true,
+    imports: [MaterialModule]
 })
+
 export class TreeComponent implements OnChanges, OnInit, OnDestroy {
     @Input() elements: any;
     @Input() selectedScenario: any;
@@ -352,12 +371,34 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
         });
     }
 
+    public zoomIn() {
+        const currentZoom = this.cy.zoom();
+        this.cy.zoom(currentZoom * 1.2);
+    }
+
+    public zoomOut() {
+        const currentZoom = this.cy.zoom();
+        this.cy.zoom(currentZoom * 0.8);
+    }
+
+    public resetView() {
+        this.cy.animate({
+            fit: {
+                eles: this.cy.elements('[status != "hidden"]'),
+                padding: 50
+            }
+        });
+    }
+
+
+
     private getCytoscapeConfig() {
         return {
             container: this.cyEl.nativeElement,
             elements: this.elements,
-            zoomingEnabled: false,
+            zoomingEnabled: true,
             zoom: 0.5,
+
             userZoomingEnabled: true,
             boxSelectionEnabled: false,
             autounselectify: false,
