@@ -373,12 +373,12 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
 
     public zoomIn() {
         const currentZoom = this.cy.zoom();
-        this.cy.zoom(currentZoom * 1.2);
+        this.cy.zoom(currentZoom * 1.15);
     }
 
     public zoomOut() {
         const currentZoom = this.cy.zoom();
-        this.cy.zoom(currentZoom * 0.8);
+        this.cy.zoom(currentZoom * 0.85);
     }
 
     public resetView() {

@@ -6,7 +6,7 @@
   <app-tree [elements]="scenarios" [selectedScenario]="selectedScenario" (selectScenario)="handleScenarioSelect($event)"
     (updateScenario)="handleScenarioUpdate($event)"></app-tree>
 
-  <button mat-fab color="accent" class="settings-fab" (click)="openKeyDialog()" matTooltip="Legend & Settings">
+  <button mat-mini-fab color="accent" class="settings-fab" (click)="openKeyDialog()" matTooltip="Legend & Settings">
     <mat-icon>settings</mat-icon>
   </button>
 </div>

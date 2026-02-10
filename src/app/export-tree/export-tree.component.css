@@ -1,13 +1,13 @@
 :host {
     position: absolute;
-    top: 20px;
-    right: 45px;
+    bottom: 70px;
+    right: 20px;
     z-index: 10;
 }
 
 @media (max-width: 767px) {
     :host {
-        top: 15px;
-        right: 25px;
+        bottom: 70px;
+        right: 20px;
     }
 }
