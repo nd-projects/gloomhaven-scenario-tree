@@ -40,7 +40,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
     @Output() selectScenario = new EventEmitter();
     @Output() updateScenario = new EventEmitter<any>();
 
-    private debugMode = false;
+    private previewMode = false;
     private settingsSubscription!: Subscription;
 
     @ViewChild('cy', { static: true }) cyEl!: ElementRef;
@@ -50,8 +50,8 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
     public constructor(private settingsService: SettingsService) { }
 
     ngOnInit() {
-        this.settingsSubscription = this.settingsService.debugMode$.subscribe(value => {
-            this.debugMode = value;
+        this.settingsSubscription = this.settingsService.previewMode$.subscribe((value: boolean) => {
+            this.previewMode = value;
             if (this.cy) {
                 this.updateStyles();
             }
@@ -68,7 +68,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
         this.render();
         if (change['selectedScenario']
             && change['selectedScenario'].currentValue !== null
-            && (change['selectedScenario'].currentValue.status !== 'hidden' || this.debugMode)) {
+            && (change['selectedScenario'].currentValue.status !== 'hidden' || this.previewMode)) {
             this.panToSelected();
         }
         this.updateStyles();
@@ -122,7 +122,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
 
     private setNodeVisibility() {
         this.cy.nodes().removeStyle();
-        if (this.debugMode) {
+        if (this.previewMode) {
             this.cy.nodes().css({
                 'visibility': 'visible',
                 'opacity': 1,
@@ -155,7 +155,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private setEdgeVisibility() {
-        if (this.debugMode) {
+        if (this.previewMode) {
             this.cy.edges().css({ 'visibility': 'visible' });
         } else {
             // Set edges from non-complete nodes to hidden
@@ -343,7 +343,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                 'border-width': '0px'
             });
         }
-        if (knowledgeIsPowerCount > 1 && !this.debugMode) {
+        if (knowledgeIsPowerCount > 1 && !this.previewMode) {
             this.cy
                 .nodes("#98, #99, #100, #101")
                 .outgoers('[type = "requiredby"]')
@@ -356,7 +356,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                     "border-width": "0px",
                 });
         }
-        if (perilAvertedCount > 1 && !this.debugMode) {
+        if (perilAvertedCount > 1 && !this.previewMode) {
             this.cy
                 .nodes("#110, #111, #112, #113")
                 .outgoers('[type = "requiredby"]')

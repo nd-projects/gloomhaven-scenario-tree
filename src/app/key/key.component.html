@@ -24,9 +24,9 @@
     </mat-list-item>
     <mat-divider></mat-divider>
     <mat-list-item>
-        <mat-slide-toggle [ngModel]="settingsService.debugMode" (ngModelChange)="onDebugModeChange($event)"
-            color="warn">
-            Debug Mode
+        <mat-slide-toggle [ngModel]="settingsService.previewMode" (ngModelChange)="onPreviewModeChange($event)"
+            color="accent">
+            Preview Mode
         </mat-slide-toggle>
     </mat-list-item>
 </mat-list>

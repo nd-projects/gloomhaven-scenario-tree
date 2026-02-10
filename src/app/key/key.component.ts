@@ -18,8 +18,8 @@ export class KeyComponent implements OnInit {
     ngOnInit() {
     }
 
-    onDebugModeChange(value: boolean) {
-        this.settingsService.setDebugMode(value);
+    onPreviewModeChange(value: boolean) {
+        this.settingsService.setPreviewMode(value);
     }
 
 }

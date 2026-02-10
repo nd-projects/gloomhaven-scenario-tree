@@ -5,16 +5,16 @@ import { BehaviorSubject } from 'rxjs';
     providedIn: 'root'
 })
 export class SettingsService {
-    private _debugMode = new BehaviorSubject<boolean>(false);
-    public debugMode$ = this._debugMode.asObservable();
+    private _previewMode = new BehaviorSubject<boolean>(false);
+    public previewMode$ = this._previewMode.asObservable();
 
     constructor() { }
 
-    setDebugMode(value: boolean) {
-        this._debugMode.next(value);
+    setPreviewMode(value: boolean) {
+        this._previewMode.next(value);
     }
 
-    get debugMode(): boolean {
-        return this._debugMode.value;
+    get previewMode(): boolean {
+        return this._previewMode.value;
     }
 }

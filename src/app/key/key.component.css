@@ -25,7 +25,17 @@ mat-icon {
     vertical-align: middle;
 }
 
-/* Toggle switch text */
-mat-slide-toggle {
+/* Toggle switch text - must pierce MDC shadow DOM */
+:host ::ng-deep .mat-mdc-slide-toggle,
+:host ::ng-deep .mdc-switch__label,
+:host ::ng-deep .mdc-label,
+:host ::ng-deep label[for^="mat-mdc-slide-toggle"] {
     color: var(--gh-text-primary) !important;
+    font-family: var(--gh-font-body) !important;
+    font-size: 16px !important;
+}
+
+/* Add gap between toggle switch and label to match icon+text spacing */
+:host ::ng-deep .mat-mdc-slide-toggle .mdc-label {
+    padding-left: 12px !important;
 }
