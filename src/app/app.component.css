@@ -2,6 +2,7 @@ app-scenario-info {
     width: 35%;
     height: 100vh;
     overflow-y: auto;
+    background-color: var(--gh-bg-surface);
 }
 
 .settings-fab {
@@ -14,7 +15,7 @@ app-scenario-info {
 app-tree {
     width: 65%;
     height: 100vh;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid var(--gh-border);
 }
 
 mat-toolbar {
@@ -23,8 +24,8 @@ mat-toolbar {
     left: 0;
     right: 0;
     z-index: 2;
-    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
-        0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.4),
+        0 6px 10px 0 rgba(0, 0, 0, 0.3), 0 1px 18px 0 rgba(0, 0, 0, 0.25);
 }
 
 mat-toolbar .nav-row {
@@ -62,6 +63,6 @@ mat-toolbar .nav-row {
         height: 70vh;
         order: 1;
         border-left: 0;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid var(--gh-border);
     }
 }

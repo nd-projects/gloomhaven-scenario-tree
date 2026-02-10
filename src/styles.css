@@ -1,13 +1,79 @@
+/* ============================================================
+   Gloomhaven Scenario Tree — Global Theme (Phase 2 Refined)
+   ============================================================ */
+
+/* --- Angular Material base theme --- */
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
 
+/* --- CSS Custom Properties (Design Tokens) --- */
+:root {
+    /* Backgrounds - Muted & Earthy */
+    --gh-bg-primary: #181a1e;       /* Deeper, less blue */
+    --gh-bg-surface: #202328;       /* Muted slate */
+    --gh-bg-surface-light: #282c32;
+    --gh-bg-hover: rgba(212, 197, 169, 0.08);
+
+    /* Text - Brightened for legibility */
+    --gh-text-primary: #f2ebd4;     /* Almost white, faint warm tint */
+    --gh-text-secondary: #b0a895;   /* Lighter grey-brown, higher contrast */
+    --gh-text-parchment: #e6d2b5;   /* Brighter parchment tone */
+
+    /* Accent colors - Re-saturated slightly for pop */
+    --gh-gold: #c9a84c;             /* Restored some brightness */
+    --gh-gold-bright: #ffcc33;      /* Vivid gold for highlights */
+    --gh-teal: #5bb0a0;             /* Brighter teal */
+    --gh-teal-dark: #2f6359;
+    --gh-red: #a53228;              /* Dried blood red */
+
+    /* Node status colors */
+    --gh-node-incomplete: #7a6c5a;
+    --gh-node-complete: #b59840;
+    --gh-node-blocked: #a53228;
+    --gh-node-locked: #4a6178;
+    --gh-node-dim: #504060;
+    --gh-node-selected: #d4a838;
+
+    /* Borders */
+    --gh-border: rgba(197, 181, 149, 0.12);
+    --gh-border-strong: rgba(197, 181, 149, 0.22);
+
+    /* Fonts */
+    --gh-font-display: 'Pirata One', cursive;
+    --gh-font-body: 'Crimson Pro', serif;
+}
+
+/* --- Base & Textures --- */
 body {
-    font: 14px 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #fff;
+    font: 16px/1.5 var(--gh-font-body);
+    background-color: var(--gh-bg-primary);
+    color: var(--gh-text-primary);
     margin: 0;
+    position: relative;
+}
+
+/* Subtle digital noise overlay for physical presence */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0.03;
+    z-index: 9999;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* --- Texture Utility --- */
+.gh-texture-parchment {
+    background-color: var(--gh-bg-surface);
+    background-image: 
+        radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.2) 100%),
+        linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 50%, rgba(0,0,0,0.02) 100%);
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.2);
+    position: relative;
 }
 
 #info {
-    color: #c88;
+    color: var(--gh-text-secondary);
     font-size: 1em;
     position: absolute;
     z-index: -1;
@@ -15,39 +81,143 @@ body {
     top: 1em;
 }
 
-.mat-mdc-dialog-container {
-    position: relative;
+/* --- Scrollbar theming --- */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--gh-bg-primary);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--gh-node-incomplete);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gh-text-secondary);
 }
 
-.scenario-info-dialog {
-    max-width: 95vw !important;
+/* --- Material Dialog Overrides --- */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+    background-color: var(--gh-bg-surface) !important;
+    background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.01) 0%, transparent 100%) !important;
+    color: var(--gh-text-primary) !important;
+    border: 1px solid var(--gh-border-strong) !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6) !important;
 }
 
-.scenario-info-dialog .mat-mdc-dialog-container {
-    padding: 0;
+/* --- Form fields --- */
+.mat-mdc-form-field .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: var(--gh-bg-surface-light) !important;
 }
 
-.hidden {
-    display: none;
+.mat-mdc-form-field .mdc-floating-label {
+    font-family: var(--gh-font-body) !important;
+    letter-spacing: 0.5px;
+    color: var(--gh-text-secondary) !important;
 }
 
-.invisible {
-    visibility: hidden;
+.mat-mdc-input-element, .mat-mdc-form-field-input-control {
+    color: var(--gh-text-primary) !important;
+    caret-color: var(--gh-gold-bright) !important;
 }
 
-/* Full screen modal overrides */
+/* Autocomplete dropdown */
+.mat-mdc-autocomplete-panel {
+    background-color: var(--gh-bg-surface) !important;
+    border: 1px solid var(--gh-border-strong);
+    color: var(--gh-text-primary) !important;
+}
+
+.mat-mdc-option {
+    color: var(--gh-text-primary) !important;
+}
+
+.mat-mdc-option:hover, .mat-mdc-option.mdc-list-item--activated {
+    background-color: var(--gh-bg-surface-light) !important;
+    color: var(--gh-gold-bright) !important;
+}
+
+.mat-mdc-option .mdc-list-item__primary-text {
+    color: inherit !important;
+}
+
+/* Expansion panel */
+.mat-expansion-panel {
+    background-color: var(--gh-bg-surface-light) !important;
+    border: 1px solid var(--gh-border);
+    box-shadow: none !important;
+}
+
+.mat-expansion-panel-header-title {
+    font-family: var(--gh-font-display) !important;
+    letter-spacing: 1px;
+}
+
+/* Button toggle group */
+.mat-button-toggle-group {
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.mat-button-toggle-checked {
+    background-color: var(--gh-gold) !important;
+    color: var(--gh-bg-primary) !important;
+}
+
+/* Dialog titles */
+.mat-mdc-dialog-title {
+    font-family: var(--gh-font-display) !important;
+    font-size: 1.6rem !important;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Mini FAB theming — dark earthy Gloomhaven style */
+.mat-mdc-mini-fab {
+    box-shadow: 0 3px 8px rgba(0,0,0,0.5) !important;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.mat-mdc-mini-fab.mat-primary,
+.mat-mdc-mini-fab.mat-accent,
+.mat-mdc-mini-fab.mat-unthemed {
+    background-color: var(--gh-bg-surface-light) !important;
+    color: var(--gh-gold) !important;
+    border: 1px solid var(--gh-border-strong);
+}
+
+.mat-mdc-mini-fab.mat-primary:hover,
+.mat-mdc-mini-fab.mat-accent:hover,
+.mat-mdc-mini-fab.mat-unthemed:hover {
+    background-color: #353a42 !important;
+    border-color: var(--gh-gold) !important;
+    box-shadow: 0 0 12px rgba(201, 168, 76, 0.3) !important;
+}
+
+.mat-mdc-mini-fab.mat-primary:disabled,
+.mat-mdc-mini-fab.mat-accent:disabled,
+.mat-mdc-mini-fab.mat-unthemed:disabled {
+    background-color: var(--gh-bg-primary) !important;
+    color: var(--gh-text-secondary) !important;
+    border-color: var(--gh-border) !important;
+    opacity: 0.5;
+}
+
+.mat-mdc-mini-fab .mat-icon {
+    color: inherit !important;
+}
+
+/* Tooltip */
+.mat-mdc-tooltip .mdc-tooltip__surface {
+    background-color: #121417 !important;
+    border: 1px solid var(--gh-border-strong);
+}
+
+/* --- Utility classes --- */
+.hidden { display: none; }
+.invisible { visibility: hidden; }
+
+/* --- Full screen modal overrides --- */
 .full-screen-modal .mat-mdc-dialog-container .mdc-dialog__surface {
-    max-width: 95vw !important;
-    max-height: 95vh !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-}
-
-.full-screen-modal .mat-mdc-dialog-content {
-    padding: 0 !important;
-    margin: 0 !important;
-    max-height: 85vh !important;
-    height: 85vh !important;
-    display: flex !important;
-    flex-direction: column !important;
+    background-color: var(--gh-bg-primary) !important;
 }

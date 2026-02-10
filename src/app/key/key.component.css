@@ -1,5 +1,17 @@
+/* Fix text contrast in list items - Force through MDC structure */
+:host ::ng-deep .mat-mdc-list-item,
+:host ::ng-deep .mdc-list-item__primary-text,
+:host ::ng-deep .mat-mdc-list-item-unscoped-content {
+    color: var(--gh-text-primary) !important;
+    font-family: var(--gh-font-body) !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
 mat-icon {
     margin-right: 16px;
+    color: var(--gh-text-primary);
+    vertical-align: middle;
 }
 
 .example-arrow-lines {
@@ -8,4 +20,12 @@ mat-icon {
     width: 30px;
     height: 1px;
     margin-right: 20px;
+    color: var(--gh-text-primary);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Toggle switch text */
+mat-slide-toggle {
+    color: var(--gh-text-primary) !important;
 }

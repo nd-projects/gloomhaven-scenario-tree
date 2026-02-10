@@ -13,15 +13,20 @@ import { CommonModule } from '@angular/common';
     selector: 'app-scenario-info-dialog',
     templateUrl: './scenario-info-dialog.html',
     styles: [`
+    ::ng-deep .mat-mdc-dialog-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-height: none !important;
+    }
     .mat-dialog-content {
-        max-height: 85vh !important;
+        height: 100% !important;
+        max-height: none !important;
         padding: 0 !important;
         margin: 0 !important;
         width: 100% !important;
-        height: 85vh !important;
         display: block !important;
         overflow-y: auto !important;
-        background-color: #222;
+        background-color: #1a1d23;
     }
     .scenario-image {
       width: 100%;
@@ -107,6 +112,47 @@ export class ScenarioInfoComponent implements OnInit, OnChanges, OnDestroy {
         const id = parseInt(this.scenario.id, 10);
         return (id <= 51 || id >= 96);
     }
+    public getVisualStatus(): string {
+        if (!this.selectedScenario || !this.scenarios) {
+            return this.scenario.status;
+        }
+        // Only incomplete scenarios can be blocked or have requirements not met
+        if (this.scenario.status !== 'incomplete') {
+            return this.scenario.status;
+        }
+        const scenarioId = this.scenario.id;
+        // Check if blocked: a completed scenario has a "blocks" edge targeting this one
+        const isBlocked = this.scenarios.edges.some((edge: any) => {
+            if (edge.data.type === 'blocks' && edge.data.target === scenarioId) {
+                const sourceNode = this.scenarios.nodes.find(
+                    (n: any) => n.data.id === edge.data.source
+                );
+                return sourceNode && sourceNode.data.status === 'complete';
+            }
+            return false;
+        });
+        if (isBlocked) {
+            return 'blocked';
+        }
+        // Check if requirements not met: an incomplete "requiredby" edge source targets this one
+        const requiresNotMet = this.scenarios.edges.some((edge: any) => {
+            if (edge.data.type === 'requiredby' && edge.data.target === scenarioId) {
+                const sourceNode = this.scenarios.nodes.find(
+                    (n: any) => n.data.id === edge.data.source
+                );
+                return sourceNode && sourceNode.data.status !== 'complete';
+            }
+            return false;
+        });
+        if (requiresNotMet) {
+            return 'requirements_not_met';
+        }
+        return this.scenario.status;
+    }
+    public isAvailable(): boolean {
+        const vs = this.getVisualStatus();
+        return vs !== 'locked' && vs !== 'hidden' && vs !== 'blocked' && vs !== 'requirements_not_met';
+    }
     public showScenarioName(node: any) {
         return (node.data.status !== 'locked' && node.data.status !== 'hidden');
     }
@@ -128,10 +174,10 @@ export class ScenarioInfoComponent implements OnInit, OnChanges, OnDestroy {
     public showScenarioModal(imageUrls: string[]) {
         this.dialog.open(ScenarioInfoDialogComponent, {
             data: { imageUrls },
-            width: '50vw',
-            height: '85vh',
-            maxWidth: '90vw',
-            maxHeight: '90vh',
+            width: '80vw',
+            height: '80vh',
+            maxWidth: '95vw',
+            maxHeight: '95vh',
             panelClass: 'full-screen-modal'
         });
     }

@@ -23,6 +23,9 @@ cytoscape.use(cxtmenu);
           <button mat-mini-fab color="accent" (click)="resetView()" matTooltip="Home View">
             <mat-icon>home</mat-icon>
           </button>
+          <button mat-mini-fab color="accent" (click)="centerOnSelected()" matTooltip="Center on Selected" [disabled]="!selectedScenario">
+            <mat-icon>my_location</mat-icon>
+          </button>
         </div>
       </div>
     `,
@@ -99,11 +102,21 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
         this.setEdgeVisibility();
         this.colorScenarios();
         this.checkSpecialCases();
-        // selected nodes are pink
+        // selected nodes get a thick gold border with layered circular glow
         this.cy.nodes(':selected').css({
-            'color': '#ff4081',
-            'background-color': '#ff4081',
-            'border-width': '0px'
+            'border-width': '4px',
+            'border-color': '#f0b429',
+            'border-style': 'solid',
+            // Inner glow ring
+            'overlay-color': '#f0b429',
+            'overlay-padding': '5px',
+            'overlay-opacity': 0.25,
+            'overlay-shape': 'ellipse',
+            // Outer glow ring (softer)
+            'underlay-color': '#f0b429',
+            'underlay-padding': '12px',
+            'underlay-opacity': 0.08,
+            'underlay-shape': 'ellipse'
         });
     }
 
@@ -119,7 +132,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
             this.cy.nodes('[status = "hidden"], [status = "locked"]').css({
                 'opacity': 0.5,
                 'text-opacity': 1,
-                'background-color': (ele: any) => ele.data('status') === 'hidden' ? '#e0e0e0' : '#000',
+                'background-color': (ele: any) => ele.data('status') === 'hidden' ? '#4a4e58' : '#607080',
                 'border-style': (ele: any) => ele.data('status') === 'hidden' ? 'dashed' : 'solid'
             });
         } else {
@@ -177,31 +190,38 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private colorScenarios() {
-        // Incomplete nodes are black
-        this.cy.nodes('[status = "incomplete"], [status = "locked"]').css({
-            'color': '#000',
-            'background-color': '#000',
+        // Incomplete nodes are warm grey-brown (available)
+        this.cy.nodes('[status = "incomplete"]').css({
+            'color': '#f2ebd4',
+            'background-color': '#7a6c5a',
             'border-width': '0px'
         });
-        // complete nodes are purple
+        // Locked nodes are steel blue (known but locked)
+        this.cy.nodes('[status = "locked"]').css({
+            'color': '#f2ebd4',
+            'background-color': '#4a6178',
+            'border-width': '0px'
+        });
+        // Complete nodes are antique gold
         this.cy.nodes('[status = "complete"]').css({
-            'color': '#3f51b5',
-            'background-color': '#3f51b5',
+            'color': '#c9a84c',
+            'background-color': '#c9a84c',
             'border-width': '0px'
         });
-        // attempted nodes are an unfilled circle
+        // Attempted nodes are an unfilled circle with gold border
         this.cy.nodes('[status = "attempted"]').css({
-            'color': '#000',
-            'background-color': '#fff',
+            'color': '#f2ebd4',
+            'background-color': 'transparent',
+            'border-color': '#c9a84c',
             'border-width': '1px'
         });
 
-        // Scenarios blocked by other scenarios being incomplete are grey
+        // Scenarios blocked by other scenarios being incomplete are faded purple-grey
         this.cy.nodes('[status != "complete"][id != 21]')
             .outgoers('edge[type = "requiredby"][target != "26"]')
             .targets('node[status != "complete"]')
             .css({
-                'background-color': '#c9c9c9',
+                'background-color': '#504060',
                 'border-width': '0px'
             });
         // Scenarios blocked by other scenarios being complete are red
@@ -209,7 +229,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
             .outgoers('edge[type = "blocks"][target != "27"][target != "31"][target != "33"]')
             .targets('node[status != "complete"]')
             .css({
-                'background-color': '#f44336',
+                'background-color': '#a53228',
                 'border-width': '0px'
             });
     }
@@ -248,7 +268,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                     this.cy.nodes('#35').outgoers('[type = "blocks"][target = "27"]').css({
                         'visibility': 'visible'
                     }).targets().css({
-                        'background-color': '#f44336',
+                        'background-color': '#c0392b',
                         'border-width': '0px'
                     });
                 }
@@ -257,7 +277,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                     this.cy.nodes('#35').outgoers('[type = "blocks"][target = "31"]').css({
                         'visibility': 'visible'
                     }).targets().css({
-                        'background-color': '#f44336',
+                        'background-color': '#c0392b',
                         'border-width': '0px'
                     });
                 }
@@ -270,7 +290,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                     this.cy.nodes('#34').outgoers('[type = "blocks"][target = "33"]').css({
                         'visibility': 'visible'
                     }).targets().css({
-                        'background-color': '#f44336',
+                        'background-color': '#c0392b',
                         'border-width': '0px'
                     });
                 }
@@ -283,7 +303,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                     this.cy.nodes('#42').outgoers('[type = "blocks"][target = "33"]').css({
                         'visibility': 'visible'
                     }).targets().css({
-                        'background-color': '#f44336',
+                        'background-color': '#c0392b',
                         'border-width': '0px'
                     });
                 }
@@ -296,7 +316,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                     this.cy.nodes('#21').outgoers('[type = "requiredby"][target = "31"]').css({
                         'visibility': 'visible'
                     }).targets().css({
-                        'background-color': '#c9c9c9',
+                        'background-color': '#504060',
                         'border-width': '0px'
                     });
                 }
@@ -310,7 +330,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                     'curve-style': 'unbundled-bezier',
                     'control-point-distances': '50 50 50'
                 }).targets().css({
-                    'background-color': '#c9c9c9',
+                    'background-color': '#504060',
                     'border-width': '0px'
                 });
             }
@@ -319,7 +339,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
             this.cy.nodes('#33').outgoers('[type = "blocks"][target = "34"]').css({
                 'visibility': 'visible'
             }).targets().css({
-                'background-color': '#f44336',
+                'background-color': '#c0392b',
                 'border-width': '0px'
             });
         }
@@ -332,7 +352,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                 })
                 .targets()
                 .css({
-                    "background-color": "#000000",
+                    "background-color": "#607080",
                     "border-width": "0px",
                 });
         }
@@ -345,7 +365,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                 })
                 .targets()
                 .css({
-                    "background-color": "#000000",
+                    "background-color": "#607080",
                     "border-width": "0px",
                 });
         }
@@ -390,6 +410,17 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
         });
     }
 
+    public centerOnSelected() {
+        if (this.selectedScenario) {
+            const selectedNode = this.cy.nodes(`#${this.selectedScenario.id}`);
+            if (selectedNode.length) {
+                this.cy.animate({
+                    center: { eles: selectedNode }
+                });
+            }
+        }
+    }
+
 
 
     private getCytoscapeConfig() {
@@ -402,7 +433,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
             userZoomingEnabled: true,
             boxSelectionEnabled: false,
             autounselectify: false,
-            autolock: false,
+            autolock: true,
             layout: {
                 name: 'preset'
             },
@@ -410,16 +441,18 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                 .selector('node')
                 .css({
                     'content': 'data(name)',
-                    'font-size': '18px',
+                    'font-size': '15px',
                     'font-weight': '600',
+                    'font-family': 'Crimson Pro, serif',
                     'text-valign': 'top',
                     'text-halign': 'center',
-                    'color': '#000',
-                    'text-outline-width': '0',
-                    'background-color': '#000',
-                    'text-outline-color': '#000',
+                    'color': '#f2ebd4',
+                    'text-outline-width': '3',
+                    'text-outline-color': '#181a1e',
+                    'text-outline-opacity': 1,
+                    'background-color': '#7a6c5a',
                     'opacity': '1',
-                    'border-color': '#3f51b5',
+                    'border-color': '#c9a84c',
                     'border-style': 'solid'
                 })
                 .selector('node[status = "locked"]')
@@ -430,10 +463,10 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                 .css({
                     'curve-style': 'bezier',
                     'target-arrow-shape': 'triangle',
-                    'target-arrow-color': '#000',
-                    'line-color': '#000',
-                    'width': 2,
-                    'opacity': '.87'
+                    'target-arrow-color': '#e0d8c8',
+                    'line-color': '#e0d8c8',
+                    'width': 2.5,
+                    'opacity': 0.6
                 })
                 .selector('edge[type = "linksto"]')
                 .css({
@@ -442,14 +475,19 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                 .selector('edge[type = "requiredby"]')
                 .css({
                     'visibility': 'hidden',
-                    'line-color': '#69f0ae',
-                    'target-arrow-color': '#69f0ae'
+                    'line-color': '#3e8275',
+                    'target-arrow-color': '#3e8275'
                 })
                 .selector('edge[type = "blocks"]')
                 .css({
                     'visibility': 'hidden',
-                    'line-color': '#f44336',
-                    'target-arrow-color': '#f44336'
+                    'line-color': '#a53228',
+                    'target-arrow-color': '#a53228'
+                })
+                .selector('node:selected')
+                .css({
+                    'border-width': '2px',
+                    'border-color': '#d4a838'
                 })
         };
     }
@@ -460,19 +498,19 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                 const data = element.data();
                 return [{
                     content: 'Incomplete',
-                    fillColor: data.status === 'incomplete' ? 'rgba(255, 64, 129, 0.75)' : 'rgba(0, 0, 0, 0.75)',
+                    fillColor: data.status === 'incomplete' ? 'rgba(181, 152, 64, 0.85)' : 'rgba(32, 35, 40, 0.9)',
                     select: (ele: any) => this.cxtMenuStatusChange('incomplete', ele)
                 }, {
                     content: 'Attempted',
-                    fillColor: data.status === 'attempted' ? 'rgba(255, 64, 129, 0.75)' : 'rgba(0, 0, 0, 0.75)',
+                    fillColor: data.status === 'attempted' ? 'rgba(181, 152, 64, 0.85)' : 'rgba(32, 35, 40, 0.9)',
                     select: (ele: any) => this.cxtMenuStatusChange('attempted', ele)
                 }, {
                     content: 'Complete',
-                    fillColor: data.status === 'complete' ? 'rgba(255, 64, 129, 0.75)' : 'rgba(0, 0, 0, 0.75)',
+                    fillColor: data.status === 'complete' ? 'rgba(181, 152, 64, 0.85)' : 'rgba(32, 35, 40, 0.9)',
                     select: (ele: any) => this.cxtMenuStatusChange('complete', ele)
                 }];
             },
-            activeFillColor: 'rgba(63, 81, 181, 1)'
+            activeFillColor: 'rgba(62, 130, 117, 1)'
         };
     }
 

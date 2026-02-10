@@ -14,6 +14,11 @@ import { CommonModule } from '@angular/common';
   }
   mat-form-field textarea {
     height: 150px;
+    color: var(--gh-text-primary) !important;
+    caret-color: var(--gh-gold-bright);
+  }
+  p {
+    color: var(--gh-text-secondary);
   }
   `],
     standalone: true,

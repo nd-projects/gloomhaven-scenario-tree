@@ -16,7 +16,8 @@
     </form>
     <div class="scenario-info-content">
         <div *ngIf="selectedScenario">
-            <div *ngIf="scenario.status === 'locked' || scenario.status === 'hidden'; else isUnlockedBlock"
+            <!-- Locked / Hidden: show only ID and unlock/show button -->
+            <div *ngIf="scenario.status === 'locked' || scenario.status === 'hidden'; else isVisibleBlock"
                 class="scenario-header">
                 <h2># {{selectedScenario.id}}</h2>
                 <button *ngIf="scenario.status === 'locked'" mat-raised-button color="primary" type="button"
@@ -30,21 +31,55 @@
                     Show
                 </button>
             </div>
-            <ng-template #isUnlockedBlock>
+            <ng-template #isVisibleBlock>
                 <div class="scenario-header">
                     <h2>{{selectedScenario.name}}</h2>
-                    <button mat-stroked-button (click)="lockScenario()" *ngIf="isSideScenario()" type="button"
+                    <button mat-stroked-button (click)="lockScenario()" *ngIf="isSideScenario() && isAvailable()" type="button"
                         [disabled]="scenario.status === 'attempted' || scenario.status === 'complete'">
                         <mat-icon>lock</mat-icon>
                         Lock Scenario
                     </button>
-                    <button mat-stroked-button (click)="hideScenario()" *ngIf="isCoreScenario()" type="button"
+                    <button mat-stroked-button (click)="hideScenario()" *ngIf="isCoreScenario() && isAvailable()" type="button"
                         [disabled]="scenario.status === 'attempted' || scenario.status === 'complete'">
                         <mat-icon>visibility_off</mat-icon>
                         Hide Scenario
                     </button>
                 </div>
-                <form (ngSubmit)="saveScenarioData(true)" #scenarioForm="ngForm">
+
+                <!-- Status section -->
+                <div class="section-header">
+                    <mat-icon>stars</mat-icon>
+                    <h3>Scenario Status</h3>
+                </div>
+
+                <!-- Blocked / Requirements Not Met badge -->
+                <div *ngIf="!isAvailable()" class="status-badge-container">
+                    <div *ngIf="getVisualStatus() === 'blocked'" class="status-badge status-blocked">
+                        <mat-icon>block</mat-icon>
+                        Blocked
+                    </div>
+                    <div *ngIf="getVisualStatus() === 'requirements_not_met'" class="status-badge status-requirements">
+                        <mat-icon>pending</mat-icon>
+                        Requirements Not Met
+                    </div>
+                </div>
+
+                <!-- Available: show status toggles -->
+                <form *ngIf="isAvailable()" (ngSubmit)="saveScenarioData(true)" #scenarioForm="ngForm">
+                    <mat-button-toggle-group #group="matButtonToggleGroup" [ngModel]="scenario.status"
+                        (ngModelChange)="handleStatusChange($event)" name="status">
+                        <mat-button-toggle value="incomplete">
+                            Incomplete
+                        </mat-button-toggle>
+                        <mat-button-toggle value="attempted">
+                            Attempted
+                        </mat-button-toggle>
+                        <mat-button-toggle value="complete">
+                            Complete
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                    <mat-divider class="section-divider"></mat-divider>
+
                     <div class="section-header">
                         <mat-icon>image</mat-icon>
                         <h3>Scenario Images</h3>
@@ -61,24 +96,6 @@
                                 class="scenario-page-img" matTooltip="Click to enlarge">
                         </div>
                     </mat-expansion-panel>
-                    <mat-divider class="section-divider"></mat-divider>
-                    
-                    <div class="section-header">
-                        <mat-icon>stars</mat-icon>
-                        <h3>Scenario Status</h3>
-                    </div>
-                    <mat-button-toggle-group #group="matButtonToggleGroup" [ngModel]="scenario.status"
-                        (ngModelChange)="handleStatusChange($event)" name="status">
-                        <mat-button-toggle value="incomplete">
-                            Incomplete
-                        </mat-button-toggle>
-                        <mat-button-toggle value="attempted">
-                            Attempted
-                        </mat-button-toggle>
-                        <mat-button-toggle value="complete">
-                            Complete
-                        </mat-button-toggle>
-                    </mat-button-toggle-group>
                     <mat-divider class="section-divider"></mat-divider>
 
                     <div *ngIf="treasureArray.length" class="treasure-section">
