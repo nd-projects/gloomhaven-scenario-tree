@@ -1,6 +1,8 @@
-import { Component, OnChanges, Input, Output, EventEmitter, ViewChild, SimpleChanges, ElementRef } from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter, ViewChild, SimpleChanges, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import cytoscape from 'cytoscape';
 import cxtmenu from 'cytoscape-cxtmenu';
+import { SettingsService } from '../settings.service';
+import { Subscription } from 'rxjs';
 
 cytoscape.use(cxtmenu);
 
@@ -10,26 +12,43 @@ cytoscape.use(cxtmenu);
     styleUrls: ['./tree.component.css'],
     standalone: true
 })
-export class TreeComponent implements OnChanges {
+export class TreeComponent implements OnChanges, OnInit, OnDestroy {
     @Input() elements: any;
     @Input() selectedScenario: any;
-    @Input() debugMode = false;
     @Output() selectScenario = new EventEmitter();
     @Output() updateScenario = new EventEmitter<any>();
+
+    private debugMode = false;
+    private settingsSubscription!: Subscription;
 
     @ViewChild('cy', { static: true }) cyEl!: ElementRef;
     private initialLoad = true;
     private cy: any;
 
-    public constructor() { }
+    public constructor(private settingsService: SettingsService) { }
+
+    ngOnInit() {
+        this.settingsSubscription = this.settingsService.debugMode$.subscribe(value => {
+            this.debugMode = value;
+            if (this.cy) {
+                this.updateStyles();
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        if (this.settingsSubscription) {
+            this.settingsSubscription.unsubscribe();
+        }
+    }
 
     public ngOnChanges(change: SimpleChanges): any {
         this.render();
         if (change['selectedScenario']
-                && change['selectedScenario'].currentValue !== null
-                && (change['selectedScenario'].currentValue.status !== 'hidden' || this.debugMode)) {
-                this.panToSelected();
-            }
+            && change['selectedScenario'].currentValue !== null
+            && (change['selectedScenario'].currentValue.status !== 'hidden' || this.debugMode)) {
+            this.panToSelected();
+        }
         this.updateStyles();
     }
 

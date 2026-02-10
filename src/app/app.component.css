@@ -4,7 +4,7 @@ app-scenario-info {
     overflow-y: auto;
 }
 
-.debug-toggle {
+.settings-fab {
     position: absolute;
     bottom: 20px;
     right: 20px;

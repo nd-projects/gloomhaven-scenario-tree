@@ -20,4 +20,11 @@
     <mat-list-item>
         <div class="example-arrow-lines" aria-hidden="true" style="color: #69f0ae"></div> Is Required By
     </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>
+        <mat-slide-toggle [ngModel]="settingsService.debugMode" (ngModelChange)="onDebugModeChange($event)"
+            color="warn">
+            Debug Mode
+        </mat-slide-toggle>
+    </mat-list-item>
 </mat-list>

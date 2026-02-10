@@ -14,80 +14,73 @@
             <mat-icon matSuffix (click)="clearScenario()">clear</mat-icon>
         </mat-form-field>
     </form>
-    <mat-tab-group [selectedIndex]="selectedTab.value" (selectedIndexChange)="selectedTab.setValue($event)"
-        [dynamicHeight]="true">
-        <mat-tab label="Scenario Info">
-            <div *ngIf="selectedScenario">
-                <div *ngIf="scenario.status === 'locked' || scenario.status === 'hidden'; else isUnlockedBlock">
-                    <h2># {{selectedScenario.id}}</h2>
-                    <button *ngIf="scenario.status === 'locked'" mat-raised-button color="primary" type="button"
-                        (click)="unlockScenario()">Unlock</button>
-                    <button *ngIf="scenario.status === 'hidden'" mat-raised-button color="primary" type="button"
-                        (click)="unhideScenario()">Show</button>
-                </div>
-                <ng-template #isUnlockedBlock>
-                    <h2>{{selectedScenario.name}}</h2>
-                    <form (ngSubmit)="saveScenarioData(true)" #scenarioForm="ngForm">
-                        <div class="button-row">
-                            <button mat-stroked-button (click)="lockScenario()" *ngIf="isSideScenario()"
-                                type="button">Lock Scenario</button>
-                            <button mat-stroked-button (click)="hideScenario()" *ngIf="!isSideScenario()"
-                                type="button">Hide Scenario</button>
-                        </div>
-                        <mat-expansion-panel *ngIf="selectedScenario.pages?.length" class="scenario-pages-panel">
-                            <mat-expansion-panel-header>
-                                <mat-panel-title>
-                                    Scenario Pages
-                                </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <div class="scenario-pages-container">
-                                <img *ngFor="let page of selectedScenario.pages" [src]="getImageUrl(page)"
-                                    (click)="showScenarioModal(selectedScenario.pages.map(getImageUrl, this))"
-                                    class="scenario-page-img" matTooltip="Click to enlarge">
-                            </div>
-                        </mat-expansion-panel>
-                        <mat-button-toggle-group #group="matButtonToggleGroup" [ngModel]="scenario.status"
-                            (ngModelChange)="handleStatusChange($event)" name="status">
-                            <mat-button-toggle value="incomplete">
-                                Incomplete
-                            </mat-button-toggle>
-                            <mat-button-toggle value="attempted">
-                                Attempted
-                            </mat-button-toggle>
-                            <mat-button-toggle value="complete">
-                                Complete
-                            </mat-button-toggle>
-                        </mat-button-toggle-group>
-                        <div *ngIf="treasureArray.length">
-                            <h3>Treasure</h3>
-                            <mat-list>
-                                <mat-list-item *ngFor="let treasure of treasureArray">
-                                    <mat-slide-toggle [checked]="treasure.looted"
-                                        (change)="handleTreasureChange($event, treasure.id)">
-                                        {{ treasure.id }}
-                                    </mat-slide-toggle>
-                                    <div class="treasure-description">
-                                        <span *ngIf="treasure.looted">{{ treasure.description }}</span>
-                                        <span *ngIf="!treasure.looted">????????????</span>
-                                    </div>
-                                </mat-list-item>
-                            </mat-list>
-                        </div>
-                        <mat-form-field>
-                            <textarea matInput placeholder="Scenario Notes" [(ngModel)]="scenario.notes"
-                                name="notes"></textarea>
-                        </mat-form-field>
-                        <button mat-raised-button color="primary" type="submit">Save Notes</button>
-                    </form>
-                </ng-template>
+    <div class="scenario-info-content">
+        <div *ngIf="selectedScenario">
+            <div *ngIf="scenario.status === 'locked' || scenario.status === 'hidden'; else isUnlockedBlock">
+                <h2># {{selectedScenario.id}}</h2>
+                <button *ngIf="scenario.status === 'locked'" mat-raised-button color="primary" type="button"
+                    (click)="unlockScenario()">Unlock</button>
+                <button *ngIf="scenario.status === 'hidden'" mat-raised-button color="primary" type="button"
+                    (click)="unhideScenario()">Show</button>
             </div>
-            <div *ngIf="!selectedScenario">
-                <p>Select A Scenario To View Details...</p>
-            </div>
-        </mat-tab>
-        <mat-tab label="Key">
-            <app-key></app-key>
-        </mat-tab>
-    </mat-tab-group>
-
+            <ng-template #isUnlockedBlock>
+                <h2>{{selectedScenario.name}}</h2>
+                <form (ngSubmit)="saveScenarioData(true)" #scenarioForm="ngForm">
+                    <div class="button-row">
+                        <button mat-stroked-button (click)="lockScenario()" *ngIf="isSideScenario()" type="button">Lock
+                            Scenario</button>
+                        <button mat-stroked-button (click)="hideScenario()" *ngIf="!isSideScenario()" type="button">Hide
+                            Scenario</button>
+                    </div>
+                    <mat-expansion-panel *ngIf="selectedScenario.pages?.length" class="scenario-pages-panel">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Scenario Pages
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="scenario-pages-container">
+                            <img *ngFor="let page of selectedScenario.pages" [src]="getImageUrl(page)"
+                                (click)="showScenarioModal(selectedScenario.pages.map(getImageUrl, this))"
+                                class="scenario-page-img" matTooltip="Click to enlarge">
+                        </div>
+                    </mat-expansion-panel>
+                    <mat-button-toggle-group #group="matButtonToggleGroup" [ngModel]="scenario.status"
+                        (ngModelChange)="handleStatusChange($event)" name="status">
+                        <mat-button-toggle value="incomplete">
+                            Incomplete
+                        </mat-button-toggle>
+                        <mat-button-toggle value="attempted">
+                            Attempted
+                        </mat-button-toggle>
+                        <mat-button-toggle value="complete">
+                            Complete
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                    <div *ngIf="treasureArray.length">
+                        <h3>Treasure</h3>
+                        <mat-list>
+                            <mat-list-item *ngFor="let treasure of treasureArray">
+                                <mat-slide-toggle [checked]="treasure.looted"
+                                    (change)="handleTreasureChange($event, treasure.id)">
+                                    {{ treasure.id }}
+                                </mat-slide-toggle>
+                                <div class="treasure-description">
+                                    <span *ngIf="treasure.looted">{{ treasure.description }}</span>
+                                    <span *ngIf="!treasure.looted">????????????</span>
+                                </div>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                    <mat-form-field>
+                        <textarea matInput placeholder="Scenario Notes" [(ngModel)]="scenario.notes"
+                            name="notes"></textarea>
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" type="submit">Save Notes</button>
+                </form>
+            </ng-template>
+        </div>
+        <div *ngIf="!selectedScenario">
+            <p>Select A Scenario To View Details...</p>
+        </div>
+    </div>
 </div>

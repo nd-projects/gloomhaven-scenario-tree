@@ -8,6 +8,12 @@ import { TreeComponent } from './tree/tree.component';
 import { CommonModule } from '@angular/common';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { KeyDialogComponent } from './key/key-dialog.component';
+import { SettingsService } from './settings.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-root',
@@ -20,17 +26,22 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     ExportTreeComponent,
     ScenarioInfoComponent,
-    TreeComponent
+    TreeComponent,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
   ]
 })
 export class AppComponent implements OnInit {
   public scenarios: any;
   public selectedScenario: any = null;
-  public debugMode = false;
+
   constructor(
     private assetService: AssetService,
     private treeLogicService: TreeLogicService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public settingsService: SettingsService,
+    private dialog: MatDialog
   ) { }
   ngOnInit() {
     this.assetService.getScenariosJSON().subscribe((scenarios: any) => this.scenarios = scenarios);
@@ -85,5 +96,11 @@ export class AppComponent implements OnInit {
   }
   private getImageUrl(activePage: any) {
     return `assets/scenarios/${activePage}.jpg`;
+  }
+
+  public openKeyDialog() {
+    this.dialog.open(KeyDialogComponent, {
+      width: '400px'
+    });
   }
 }

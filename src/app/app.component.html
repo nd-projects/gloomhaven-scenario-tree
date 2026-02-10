@@ -1,12 +1,12 @@
 <div class="wrapper">
-  <!-- Comment this out to hide the debug toggle -->
-  <div class="debug-toggle">
-    <mat-slide-toggle [(ngModel)]="debugMode" color="warn">Debug Mode</mat-slide-toggle>
-  </div>
   <app-export-tree [scenarios]="scenarios" (importScenarios)="handleScenariosImport($event)"></app-export-tree>
   <app-scenario-info [scenarios]="scenarios" [selectedScenario]="selectedScenario"
     (selectScenario)="handleScenarioSelect($event)" (updateScenario)="handleScenarioUpdate($event)">
   </app-scenario-info>
-  <app-tree [elements]="scenarios" [selectedScenario]="selectedScenario" [debugMode]="debugMode"
-    (selectScenario)="handleScenarioSelect($event)" (updateScenario)="handleScenarioUpdate($event)"></app-tree>
+  <app-tree [elements]="scenarios" [selectedScenario]="selectedScenario" (selectScenario)="handleScenarioSelect($event)"
+    (updateScenario)="handleScenarioUpdate($event)"></app-tree>
+
+  <button mat-fab color="accent" class="settings-fab" (click)="openKeyDialog()" matTooltip="Legend & Settings">
+    <mat-icon>settings</mat-icon>
+  </button>
 </div>
