@@ -89,17 +89,19 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private setNodeVisibility() {
+        this.cy.nodes().removeStyle();
         if (this.debugMode) {
             this.cy.nodes().css({
                 'visibility': 'visible',
                 'opacity': 1,
-                'text-opacity': 1
+                'text-opacity': 1,
+                'content': (ele: any) => ele.data('name')
             });
-            this.cy.nodes('[status = "hidden"]').css({
+            this.cy.nodes('[status = "hidden"], [status = "locked"]').css({
                 'opacity': 0.5,
-                'text-opacity': 0.5,
-                'background-color': '#e0e0e0',
-                'border-style': 'dashed'
+                'text-opacity': 1,
+                'background-color': (ele: any) => ele.data('status') === 'hidden' ? '#e0e0e0' : '#000',
+                'border-style': (ele: any) => ele.data('status') === 'hidden' ? 'dashed' : 'solid'
             });
         } else {
             this.cy.nodes('[status != "hidden"]')
@@ -114,43 +116,44 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                     'visibility': 'hidden',
                     'text-opacity': '0'
                 });
+            this.cy.nodes('[status = "locked"]').css({
+                'content': (ele: any) => '#' + ele.data('id')
+            });
         }
     }
 
     private setEdgeVisibility() {
-        // Set edges from non-complete nodes to hidden
-        this.cy.nodes('[status = "incomplete"], [status = "attempted"], [status = "hidden"], [status = "locked"]')
-            .outgoers('edge')
-            .css({ 'visibility': 'hidden' });
-        // Set unlock edges from complete nodes to visible
-        this.cy.nodes('[status = "complete"]')
-            .outgoers('edge[type = "unlocks"]')
-            .css({ 'visibility': 'visible' });
-        // Set requiredby edges from visible nodes to visible
-        this.cy.nodes('[status != "hidden"][id != 21]')
-            .outgoers('edge[type = "requiredby"][target != "26"]')
-            .css({ 'visibility': 'visible' });
-        // Set requiredby edges from complete nodes to hidden (requirement met)
-        this.cy.nodes('[status = "complete"]')
-            .outgoers('edge[type = "requiredby"]')
-            .css({ 'visibility': 'hidden' });
-        // Set blocks edges from complete nodes to visible
-        this.cy.nodes('[status = "complete"]')
-            .outgoers('edge[type = "blocks"][target != "27"][target != "31"][target != "33"]')
-            .css({ 'visibility': 'visible' });
-        // Set blocks edges to complete nodes to hidden (completed nodes cannot be blocked)
-        this.cy.nodes('[status = "complete"]')
-            .incomers('edge[type = "blocks"]')
-            .css({ 'visibility': 'hidden' });
-        // Set edges coming into hidden nodes to be hidden (cleans up edges to nothing)
-        if (!this.debugMode) {
+        if (this.debugMode) {
+            this.cy.edges().css({ 'visibility': 'visible' });
+        } else {
+            // Set edges from non-complete nodes to hidden
+            this.cy.nodes('[status = "incomplete"], [status = "attempted"], [status = "hidden"], [status = "locked"]')
+                .outgoers('edge')
+                .css({ 'visibility': 'hidden' });
+            // Set unlock edges from complete nodes to visible
+            this.cy.nodes('[status = "complete"]')
+                .outgoers('edge[type = "unlocks"]')
+                .css({ 'visibility': 'visible' });
+            // Set requiredby edges from visible nodes to visible
+            this.cy.nodes('[status != "hidden"][id != 21]')
+                .outgoers('edge[type = "requiredby"][target != "26"]')
+                .css({ 'visibility': 'visible' });
+            // Set requiredby edges from complete nodes to hidden (requirement met)
+            this.cy.nodes('[status = "complete"]')
+                .outgoers('edge[type = "requiredby"]')
+                .css({ 'visibility': 'hidden' });
+            // Set blocks edges from complete nodes to visible
+            this.cy.nodes('[status = "complete"]')
+                .outgoers('edge[type = "blocks"][target != "27"][target != "31"][target != "33"]')
+                .css({ 'visibility': 'visible' });
+            // Set blocks edges to complete nodes to hidden (completed nodes cannot be blocked)
+            this.cy.nodes('[status = "complete"]')
+                .incomers('edge[type = "blocks"]')
+                .css({ 'visibility': 'hidden' });
+            // Set edges coming into hidden nodes to be hidden (cleans up edges to nothing)
             this.cy.nodes('[status = "hidden"]')
                 .incomers('edge')
                 .css({ 'visibility': 'hidden' });
-        } else {
-            this.cy.nodes('[status = "hidden"]')
-                .incomers('edge')
-                .css({ 'visibility': 'visible' });
         }
     }
 
@@ -301,7 +304,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                 'border-width': '0px'
             });
         }
-        if (knowledgeIsPowerCount > 1) {
+        if (knowledgeIsPowerCount > 1 && !this.debugMode) {
             this.cy
                 .nodes("#98, #99, #100, #101")
                 .outgoers('[type = "requiredby"]')
@@ -314,7 +317,7 @@ export class TreeComponent implements OnChanges, OnInit, OnDestroy {
                     "border-width": "0px",
                 });
         }
-        if (perilAvertedCount > 1) {
+        if (perilAvertedCount > 1 && !this.debugMode) {
             this.cy
                 .nodes("#110, #111, #112, #113")
                 .outgoers('[type = "requiredby"]')
