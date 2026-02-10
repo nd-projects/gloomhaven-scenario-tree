@@ -16,7 +16,8 @@
     </form>
     <div class="scenario-info-content">
         <div *ngIf="selectedScenario">
-            <div *ngIf="scenario.status === 'locked' || scenario.status === 'hidden'; else isUnlockedBlock">
+            <div *ngIf="scenario.status === 'locked' || scenario.status === 'hidden'; else isUnlockedBlock"
+                class="scenario-header">
                 <h2># {{selectedScenario.id}}</h2>
                 <button *ngIf="scenario.status === 'locked'" mat-raised-button color="primary" type="button"
                     (click)="unlockScenario()">Unlock</button>
@@ -24,14 +25,16 @@
                     (click)="unhideScenario()">Show</button>
             </div>
             <ng-template #isUnlockedBlock>
-                <h2>{{selectedScenario.name}}</h2>
+                <div class="scenario-header">
+                    <h2>{{selectedScenario.name}}</h2>
+                    <button mat-stroked-button (click)="lockScenario()" *ngIf="isSideScenario()" type="button"
+                        [disabled]="scenario.status === 'attempted' || scenario.status === 'complete'">Lock
+                        Scenario</button>
+                    <button mat-stroked-button (click)="hideScenario()" *ngIf="!isSideScenario()" type="button"
+                        [disabled]="scenario.status === 'attempted' || scenario.status === 'complete'">Hide
+                        Scenario</button>
+                </div>
                 <form (ngSubmit)="saveScenarioData(true)" #scenarioForm="ngForm">
-                    <div class="button-row">
-                        <button mat-stroked-button (click)="lockScenario()" *ngIf="isSideScenario()" type="button">Lock
-                            Scenario</button>
-                        <button mat-stroked-button (click)="hideScenario()" *ngIf="!isSideScenario()" type="button">Hide
-                            Scenario</button>
-                    </div>
                     <mat-expansion-panel *ngIf="selectedScenario.pages?.length" class="scenario-pages-panel">
                         <mat-expansion-panel-header>
                             <mat-panel-title>

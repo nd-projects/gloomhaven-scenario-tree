@@ -7,9 +7,21 @@
 }
 
 h2 {
-    text-align: center;
     color: #000000;
     opacity: 0.87;
+    margin: 0;
+}
+
+.scenario-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.scenario-header button {
+    width: auto;
+    margin: 0;
 }
 
 .button-row button {
@@ -67,6 +79,7 @@ mat-form-field textarea {
         width: 100%;
     }
 }
+
 .scenario-pages-panel {
     margin-bottom: 20px;
 }
@@ -81,7 +94,7 @@ mat-form-field textarea {
 .scenario-page-img {
     width: 100%;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .scenario-page-img {
