@@ -100,7 +100,12 @@ export class ScenarioInfoComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
     public isSideScenario() {
-        return (parseInt(this.scenario.id, 10) > 51);
+        const id = parseInt(this.scenario.id, 10);
+        return (id >= 52 && id <= 95);
+    }
+    public isCoreScenario() {
+        const id = parseInt(this.scenario.id, 10);
+        return (id <= 51 || id >= 96);
     }
     public showScenarioName(node: any) {
         return (node.data.status !== 'locked' && node.data.status !== 'hidden');

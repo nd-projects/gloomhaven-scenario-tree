@@ -38,7 +38,7 @@
                         <mat-icon>lock</mat-icon>
                         Lock Scenario
                     </button>
-                    <button mat-stroked-button (click)="hideScenario()" *ngIf="!isSideScenario()" type="button"
+                    <button mat-stroked-button (click)="hideScenario()" *ngIf="isCoreScenario()" type="button"
                         [disabled]="scenario.status === 'attempted' || scenario.status === 'complete'">
                         <mat-icon>visibility_off</mat-icon>
                         Hide Scenario

@@ -36,15 +36,20 @@ export class TreeLogicService {
             .filter((edge: any) => (edge.data.source === parentId && (edge.data.type === 'unlocks' || edge.data.type === 'linksto')))
             .forEach((childEdge: any) => {
                 const childScenarioIndex = scenarios.nodes.findIndex((scenario: any) => scenario.data.id === childEdge.data.target);
-                const incomingEdges = scenarios.edges.filter((edge: any) => (edge.data.target === childEdge.data.target && edge.data.source !== parentId));
-                let keepActive: any;
-                incomingEdges.forEach((incomingEdge: any) => {
-                    keepActive = scenarios.nodes.find((scenario: any) => (
-                        scenario.data.id === incomingEdge.data.source && scenario.data.status === 'complete'));
+                const incomingEdges = scenarios.edges.filter((edge: any) => (
+                    edge.data.target === childEdge.data.target && 
+                    edge.data.source !== parentId &&
+                    (edge.data.type === 'unlocks' || edge.data.type === 'linksto')
+                ));
+                const keepActive = incomingEdges.some((incomingEdge: any) => {
+                    const sourceNode = scenarios.nodes.find((scenario: any) => 
+                        scenario.data.id === incomingEdge.data.source && scenario.data.status === 'complete');
+                    return !!sourceNode;
                 });
-                if (typeof keepActive === 'undefined') {
+                if (!keepActive) {
                     if (scenarios.nodes[childScenarioIndex].data.status === 'incomplete') {
-                        if (parseInt(scenarios.nodes[childScenarioIndex].data.id, 10) <= 51) {
+                        const id = parseInt(scenarios.nodes[childScenarioIndex].data.id, 10);
+                        if (id <= 51 || id >= 96) {
                             scenarios.nodes[childScenarioIndex].data.status = 'hidden';
                         } else {
                             scenarios.nodes[childScenarioIndex].data.status = 'locked';
