@@ -4,6 +4,13 @@ app-scenario-info {
     overflow-y: auto;
 }
 
+.debug-toggle {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
 app-tree {
     width: 65%;
     height: 100vh;

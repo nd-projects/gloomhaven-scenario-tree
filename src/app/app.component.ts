@@ -6,6 +6,8 @@ import { ExportTreeComponent } from './export-tree/export-tree.component';
 import { ScenarioInfoComponent } from './scenario-info/scenario-info.component';
 import { TreeComponent } from './tree/tree.component';
 import { CommonModule } from '@angular/common';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +16,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [
     CommonModule,
+    MatSlideToggleModule,
+    FormsModule,
     ExportTreeComponent,
     ScenarioInfoComponent,
     TreeComponent
@@ -22,6 +26,7 @@ import { CommonModule } from '@angular/common';
 export class AppComponent implements OnInit {
   public scenarios: any;
   public selectedScenario: any = null;
+  public debugMode = false;
   constructor(
     private assetService: AssetService,
     private treeLogicService: TreeLogicService,

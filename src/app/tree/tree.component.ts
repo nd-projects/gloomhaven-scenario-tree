@@ -13,6 +13,7 @@ cytoscape.use(cxtmenu);
 export class TreeComponent implements OnChanges {
     @Input() elements: any;
     @Input() selectedScenario: any;
+    @Input() debugMode = false;
     @Output() selectScenario = new EventEmitter();
     @Output() updateScenario = new EventEmitter<any>();
 
@@ -25,10 +26,10 @@ export class TreeComponent implements OnChanges {
     public ngOnChanges(change: SimpleChanges): any {
         this.render();
         if (change['selectedScenario']
-            && change['selectedScenario'].currentValue !== null
-            && change['selectedScenario'].currentValue.status !== 'hidden') {
-            this.panToSelected();
-        }
+                && change['selectedScenario'].currentValue !== null
+                && (change['selectedScenario'].currentValue.status !== 'hidden' || this.debugMode)) {
+                this.panToSelected();
+            }
         this.updateStyles();
     }
 
@@ -69,14 +70,32 @@ export class TreeComponent implements OnChanges {
     }
 
     private setNodeVisibility() {
-        this.cy.nodes('[status != "hidden"]')
-            .css({ 'visibility': 'visible' })
-            .selectify();
-        this.cy.nodes('[status = "hidden"]')
-            .css({
-                'visibility': 'hidden',
-                'text-opacity': '0'
+        if (this.debugMode) {
+            this.cy.nodes().css({
+                'visibility': 'visible',
+                'opacity': 1,
+                'text-opacity': 1
             });
+            this.cy.nodes('[status = "hidden"]').css({
+                'opacity': 0.5,
+                'text-opacity': 0.5,
+                'background-color': '#e0e0e0',
+                'border-style': 'dashed'
+            });
+        } else {
+            this.cy.nodes('[status != "hidden"]')
+                .css({
+                    'visibility': 'visible',
+                    'opacity': 1,
+                    'text-opacity': 1
+                })
+                .selectify();
+            this.cy.nodes('[status = "hidden"]')
+                .css({
+                    'visibility': 'hidden',
+                    'text-opacity': '0'
+                });
+        }
     }
 
     private setEdgeVisibility() {
@@ -105,9 +124,15 @@ export class TreeComponent implements OnChanges {
             .incomers('edge[type = "blocks"]')
             .css({ 'visibility': 'hidden' });
         // Set edges coming into hidden nodes to be hidden (cleans up edges to nothing)
-        this.cy.nodes('[status = "hidden"]')
-            .incomers('edge')
-            .css({ 'visibility': 'hidden' });
+        if (!this.debugMode) {
+            this.cy.nodes('[status = "hidden"]')
+                .incomers('edge')
+                .css({ 'visibility': 'hidden' });
+        } else {
+            this.cy.nodes('[status = "hidden"]')
+                .incomers('edge')
+                .css({ 'visibility': 'visible' });
+        }
     }
 
     private colorScenarios() {
