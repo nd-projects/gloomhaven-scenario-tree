@@ -1,10 +1,11 @@
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
 
 body {
     font: 14px 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-color: #fff;
     margin: 0;
 }
+
 #info {
     color: #c88;
     font-size: 1em;
@@ -13,18 +14,23 @@ body {
     left: 1em;
     top: 1em;
 }
-.mat-dialog-container {
+
+.mat-mdc-dialog-container {
     position: relative;
 }
+
 .scenario-info-dialog {
-    max-width: 95vw!important;
+    max-width: 95vw !important;
 }
-.scenario-info-dialog .mat-dialog-container {
+
+.scenario-info-dialog .mat-mdc-dialog-container {
     padding: 0;
-  }
+}
+
 .hidden {
     display: none;
 }
+
 .invisible {
     visibility: hidden;
 }

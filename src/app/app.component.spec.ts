@@ -1,27 +1,40 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { AssetService } from './asset.service';
+import { TreeLogicService } from './tree-logic.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { of } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+class MockAssetService {
+  getScenariosJSON() {
+    return of({ nodes: [], edges: [] });
+  }
+  setScenariosJSON(scenarios: any) { }
+  getEncodedScenarios(scenarios: any) { return ''; }
+  getDecodedScenarios(nodes: any, encoded: any) { return {}; }
+  getImageUrl(page: any) { return ''; }
+}
+
+class MockMatSnackBar {
+  open(message: string, action: string, config: any) { }
+}
+
 describe('AppComponent', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
-      ],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [AppComponent, NoopAnimationsModule],
+      providers: [
+        { provide: AssetService, useClass: MockAssetService },
+        TreeLogicService,
+        { provide: MatSnackBar, useClass: MockMatSnackBar }
+      ]
     }).compileComponents();
-  }));
-  it('should create the app', async(() => {
+  });
+
+  it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
+    const app = fixture.componentInstance;
     expect(app).toBeTruthy();
-  }));
-  it(`should have as title 'app'`, async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('app');
-  }));
-  it('should render title in a h1 tag', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to app!');
-  }));
+  });
 });

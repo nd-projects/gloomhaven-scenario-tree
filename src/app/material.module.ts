@@ -41,6 +41,6 @@ import { MatListModule } from '@angular/material/list';
         MatSlideToggleModule,
         MatListModule
     ],
-    providers: [ ]
-  })
-  export class MaterialModule { }
+    providers: []
+})
+export class MaterialModule { }
