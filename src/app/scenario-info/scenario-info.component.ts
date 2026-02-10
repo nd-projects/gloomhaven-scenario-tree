@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, OnChanges, EventEmitter, Output, Inject } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, EventEmitter, Output, Inject, OnDestroy } from '@angular/core';
 import { AssetService } from '../asset.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { map, startWith, debounceTime } from 'rxjs/operators';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import cloneDeep from 'lodash.clonedeep';
 import { MaterialModule } from '../material.module';
@@ -48,7 +48,7 @@ export class ScenarioInfoDialogComponent {
         ReactiveFormsModule
     ]
 })
-export class ScenarioInfoComponent implements OnInit, OnChanges {
+export class ScenarioInfoComponent implements OnInit, OnChanges, OnDestroy {
     @Input() selectedScenario: any;
     @Input() scenarios: any;
     @Output() selectScenario = new EventEmitter();
@@ -62,6 +62,8 @@ export class ScenarioInfoComponent implements OnInit, OnChanges {
         treasure: {}
     };
     public treasureArray: any[] = [];
+    private notesSubject = new Subject<string>();
+    private notesSubscription!: Subscription;
     constructor(
         public assetService: AssetService,
         private snackBar: MatSnackBar,
@@ -75,6 +77,18 @@ export class ScenarioInfoComponent implements OnInit, OnChanges {
                 map(value => typeof value === 'string' ? value : value.data.name),
                 map(scenario => scenario ? this.filterScenarios(scenario) : this.scenarios.nodes.slice())
             );
+
+        this.notesSubscription = this.notesSubject.pipe(
+            debounceTime(500)
+        ).subscribe(() => {
+            this.saveScenarioData(false);
+        });
+    }
+
+    ngOnDestroy() {
+        if (this.notesSubscription) {
+            this.notesSubscription.unsubscribe();
+        }
     }
     ngOnChanges() {
         if (this.selectedScenario !== null && typeof this.selectedScenario !== 'undefined') {
@@ -143,6 +157,9 @@ export class ScenarioInfoComponent implements OnInit, OnChanges {
     public hideScenario() {
         this.scenario.status = 'hidden';
         this.saveScenarioData(false);
+    }
+    public onNotesChange() {
+        this.notesSubject.next(this.scenario.notes);
     }
     public displayFn(scenario: any) {
         return scenario ? scenario.data.name : undefined;

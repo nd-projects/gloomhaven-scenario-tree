@@ -22,6 +22,15 @@ h2 {
 .scenario-header button {
     width: auto;
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.scenario-header button mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
 }
 
 .button-row button {
@@ -29,8 +38,16 @@ h2 {
 }
 
 button[mat-stroked-button] {
-    margin-bottom: 60px;
-    width: 40%;
+    margin-bottom: 0px; /* Reduced margin since we have dividers now */
+    padding: 0 12px;
+}
+
+.treasure-item:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.treasure-row mat-slide-toggle {
+    margin-left: 8px;
 }
 
 mat-button-toggle-group {
@@ -58,8 +75,92 @@ mat-form-field textarea {
     height: 100px;
 }
 
+.section-divider {
+    margin: 20px 0;
+    border-top-color: rgba(0, 0, 0, 0.12);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.section-header mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #3f51b5;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.treasure-section {
+    margin-bottom: 10px;
+}
+
+.treasure-item {
+    height: auto !important;
+    padding: 0 !important;
+    margin-bottom: 8px;
+}
+
+.treasure-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.treasure-id {
+    font-weight: bold;
+    margin-left: 4px;
+}
+
 .treasure-description {
-    margin-left: 30px;
+    margin-left: 16px;
+    flex: 1;
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.hidden-treasure {
+    color: rgba(0, 0, 0, 0.38);
+    font-style: italic;
+}
+
+.placeholder-text {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.lock-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.notes-section {
+    margin-top: 10px;
+}
+
+.actions-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.actions-row button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 @media (max-width: 1023px) {
