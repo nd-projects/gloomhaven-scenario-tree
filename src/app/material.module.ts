@@ -11,6 +11,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
     imports: [
@@ -25,7 +26,8 @@ import { MatListModule } from '@angular/material/list';
         MatTabsModule,
         MatAutocompleteModule,
         MatSlideToggleModule,
-        MatListModule
+        MatListModule,
+        MatExpansionModule
     ],
     exports: [
         MatFormFieldModule,
@@ -39,7 +41,8 @@ import { MatListModule } from '@angular/material/list';
         MatTabsModule,
         MatAutocompleteModule,
         MatSlideToggleModule,
-        MatListModule
+        MatListModule,
+        MatExpansionModule
     ],
     providers: []
 })

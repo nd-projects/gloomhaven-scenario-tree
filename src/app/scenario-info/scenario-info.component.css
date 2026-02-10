@@ -67,3 +67,28 @@ mat-form-field textarea {
         width: 100%;
     }
 }
+.scenario-pages-panel {
+    margin-bottom: 20px;
+}
+
+.scenario-pages-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.scenario-page-img {
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.scenario-page-img {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.scenario-page-img:hover {
+    transform: scale(1.02);
+}

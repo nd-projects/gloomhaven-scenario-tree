@@ -29,13 +29,23 @@
                     <h2>{{selectedScenario.name}}</h2>
                     <form (ngSubmit)="saveScenarioData(true)" #scenarioForm="ngForm">
                         <div class="button-row">
-                            <button mat-stroked-button (click)="showScenarioModal()" type="button">Scenario
-                                Pages</button>
                             <button mat-stroked-button (click)="lockScenario()" *ngIf="isSideScenario()"
                                 type="button">Lock Scenario</button>
                             <button mat-stroked-button (click)="hideScenario()" *ngIf="!isSideScenario()"
                                 type="button">Hide Scenario</button>
                         </div>
+                        <mat-expansion-panel *ngIf="selectedScenario.pages?.length" class="scenario-pages-panel">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    Scenario Pages
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="scenario-pages-container">
+                                <img *ngFor="let page of selectedScenario.pages" [src]="getImageUrl(page)"
+                                    (click)="showScenarioModal(selectedScenario.pages.map(getImageUrl, this))"
+                                    class="scenario-page-img" matTooltip="Click to enlarge">
+                            </div>
+                        </mat-expansion-panel>
                         <mat-button-toggle-group #group="matButtonToggleGroup" [ngModel]="scenario.status"
                             (ngModelChange)="handleStatusChange($event)" name="status">
                             <mat-button-toggle value="incomplete">

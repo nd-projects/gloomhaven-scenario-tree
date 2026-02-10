@@ -34,3 +34,20 @@ body {
 .invisible {
     visibility: hidden;
 }
+
+/* Full screen modal overrides */
+.full-screen-modal .mat-mdc-dialog-container .mdc-dialog__surface {
+    max-width: 95vw !important;
+    max-height: 95vh !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+.full-screen-modal .mat-mdc-dialog-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-height: 85vh !important;
+    height: 85vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+}

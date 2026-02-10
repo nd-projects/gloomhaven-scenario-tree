@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Inject, OnChanges, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, EventEmitter, Output, Inject } from '@angular/core';
 import { AssetService } from '../asset.service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,53 +15,26 @@ import { KeyComponent } from '../key/key.component';
     templateUrl: './scenario-info-dialog.html',
     styles: [`
     .mat-dialog-content {
-        max-height: 100vh;
-        padding: 0;
-        margin: 0;
-        width: 100%;
-    }
-    p {
-      position: absolute;
-      right: 0;
-      margin: 0;
-      padding: 15px;
-      font-weight: 500;
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-    @media (max-width: 767px) {
-      p {
-        font-size: 8px;
-      }
+        max-height: 85vh !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        height: 85vh !important;
+        display: block !important;
+        overflow-y: auto !important;
+        background-color: #222;
     }
     .scenario-image {
       width: 100%;
+      height: auto;
+      display: block;
     }
   `],
     standalone: true,
     imports: [MaterialModule, CommonModule]
 })
 export class ScenarioInfoDialogComponent {
-    public selectedScenario: any;
-    constructor(
-        public dialogRef: MatDialogRef<ScenarioInfoDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
-        public assetService: AssetService) {
-        this.selectedScenario = data.selectedScenario;
-    }
-
-    close(): void {
-        this.dialogRef.close();
-    }
-    public getNextScenarioPage() {
-        const pages = this.selectedScenario.pages;
-        let activeIndex = pages.indexOf(this.selectedScenario.activePage);
-        activeIndex++;
-        if (activeIndex === pages.length) {
-            activeIndex = 0;
-        }
-        this.selectedScenario.activePage = pages[activeIndex];
-        this.selectedScenario.imageUrl = this.assetService.getImageUrl(this.selectedScenario.activePage);
-    }
+    constructor(@Inject(MAT_DIALOG_DATA) public data: { imageUrls: string[] }) { }
 }
 
 @Component({
@@ -93,8 +66,9 @@ export class ScenarioInfoComponent implements OnInit, OnChanges {
     };
     public treasureArray: any[] = [];
     constructor(
-        public dialog: MatDialog,
-        private snackBar: MatSnackBar
+        public assetService: AssetService,
+        private snackBar: MatSnackBar,
+        public dialog: MatDialog
     ) { }
 
     ngOnInit() {
@@ -133,12 +107,18 @@ export class ScenarioInfoComponent implements OnInit, OnChanges {
         this.selectScenario.emit($event.option.value);
         this.scenarioCtrl.patchValue('');
     }
-    public showScenarioModal() {
-        const dialogRef = this.dialog.open(ScenarioInfoDialogComponent, {
-            panelClass: 'scenario-info-dialog',
-            data: { selectedScenario: this.selectedScenario }
+    public getImageUrl(page: string) {
+        return this.assetService.getImageUrl(page);
+    }
+    public showScenarioModal(imageUrls: string[]) {
+        this.dialog.open(ScenarioInfoDialogComponent, {
+            data: { imageUrls },
+            width: '50vw',
+            height: '85vh',
+            maxWidth: '90vw',
+            maxHeight: '90vh',
+            panelClass: 'full-screen-modal'
         });
-        dialogRef.afterClosed().subscribe(() => { });
     }
     public clearScenario() {
         this.scenarioCtrl.patchValue('');
