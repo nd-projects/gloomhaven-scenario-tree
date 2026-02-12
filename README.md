@@ -33,3 +33,13 @@ A visual campaign tracker for **Gloomhaven**, allowing you to track progress, un
     ```
 
     Open [http://localhost:4200](http://localhost:4200) to view it in the browser.
+
+## Deployment
+
+To deploy the application to GitHub Pages, run the following command:
+
+```bash
+npm run ng deploy -- --base-href "https://nd-projects.github.io/gloomhaven-scenario-tree/"
+```
+
+This will build the project and push the artifacts to the `gh-pages` branch.
